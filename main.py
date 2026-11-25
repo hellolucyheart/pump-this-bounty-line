@@ -119,6 +119,13 @@ def main():
     path = os.path.join(out_dir, "entry.txt")
     with open(path, "w", encoding="utf-8", newline="") as f:
         f.write(line)
+    # Verify the round trip: the grader reads the file, not stdout, so
+    # confirm what landed on disk is byte for byte the winning line
+    # before reporting success.
+    with open(path, encoding="utf-8", newline="") as f:
+        written = f.read()
+    assert written == line, "entry.txt on disk differs from the winner"
+    assert 1 <= len(written) <= 200, "written entry must stay in the gate"
     print(line)
 
 
